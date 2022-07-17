@@ -7,6 +7,7 @@ class carColors(Enum):
     SILVER = object()
     GREEN = object()
     YELLOW = object()
+    NONE = object()
 
 class hoodType(Enum):
     REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
@@ -69,7 +70,10 @@ class Fender:
     def getColor(self):
         return self.color.name.lower().capitalize()
     def getType(self):
-        return self.type.name
+        if self.type.name == "CARBONFIBER":
+            return "Carbon Fiber"
+        else:
+            return self.type.name.lower().capitalize()
     def setColor(self, color):
         self.color = carColors[color.upper()]
     def setType(self, type):
@@ -215,24 +219,6 @@ class Customer():
 customer1 =  Customer('Syed', 'Ali', 'Naqvi', '12345 Good Ave', 'Number 1', 'Hastings', 'MN',  '55022')
 customer2 =  Customer('Gloria', 'J', 'Redford', '499 Apple Street', '', 'Eagan', 'MN', '55123')
 customer1.setCustomerVehicle("Tesla","Model 3",2019,["lifted","silver"],["carbon fiber","black"],"black","Paint-coated")
-
+customer2.setCustomerVehicle("Ford","F150",2016,["none","None"],["Carbon Fiber","black"],"yellow","Powder-coated")
 customer1.toString()
-## Vehicle1
-#Create a Vehicle Object for Ali’s requirements as follows and call it vehicle1. You need to call the Vehicle constructor to pass all the following objects to it. Remember that the Vehicle object resides inside the CustomerClass.
-
-# Make Tesla, Model Model 3, Year 2019
-# Needs the following:
-# Hood = Lifted, Color=Silver
-# Fender = Carbon Fiber, Color = Black.
-# Doors Color=Black
-# Wheelset = Paint-coated
-
-## Vehicle2
-#Create a Vehicle Object for Gloria’s requirements as follows and call it vehicle2. You need to call the Vehicle constructor to pass all the following objects to it.
-
-# Make Ford, Model F150, Year 2016
-# Needs the following:
-# Hood = None, Color=no color option
-# Fender = Carbon Fiber, Color = Black.
-# Doors Color=Yellow
-# Wheelset = Powder-coated
+customer2.toString()
