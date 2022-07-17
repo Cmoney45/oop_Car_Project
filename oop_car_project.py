@@ -1,81 +1,143 @@
-from audioop import add
-from email.headerregistry import Address
-from enum import Enum
-from msilib.schema import Class
-from os import stat
-from re import L
-from tkinter.messagebox import RETRY
+from enum import Enum, auto
+
+class carColors(Enum):
+    RED = object()
+    BLUE = object()
+    BLACK = object()
+    SILVER = object()
+    GREEN = object()
+    YELLOW = object()
+
+class hoodType(Enum):
+    REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
+class FenderType(Enum):
+    REGULAR, SPORTS, CARBONFIBER = 100.00, 200.00, 1000.00
+class WheelType(Enum):
+    POWDER_COATED, PAINT_COATED, CLEAR_COATED, CHROME_PLATED, BARE_POLISHED, NONE = 1,2,3,4,5,0.0
+# class carPart(*args):
+#     def __init__(self,partName,type,color):
+#         self.partName = partName
+#         self.color = carColors[color.upper()]
+#         self.type = hoodType[type.upper()]
+#     def getPrice(self):
+#         return self.type.value
+#     def getColor(self):
+#         return self.color.name.lower().capitalize()
+#     def setColor(self, color):
+#         self.color = carColors(color)
+#     def toString(self):
+#         return print("{}: {} color, Price: ${:,.2f}".format(
+#             self.partName,
+#             self.getColor(),
+#             self.getPrice()))
 
 #Hood area
-class Hood(Enum):
-    def __init__(self) -> None:
-        super().__init__()
-    REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
-    Enum Color = "Red", "Blue", "Black", "Silver", "Green", "Yellow"
-    #Hood type price Regular=$499.00, Sports=$599.00, Lifted=$699.00, None=$0.00
-    getHoodPrice()
-    Enum  getHoodColor()
-    setHoodColor(Enum Color) 
-    Enum getHoodType()
-    setHoodType(Enum)
-    String toString()
-    {
-        # Print the contents of the class as per requirement in the results listed at the bottom
-    }
+class Hood:
+    #class hoodType(Enum):
+        #REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
+
+    def __init__(self,type,color):
+        self.color = carColors[color.upper()]
+        self.type = hoodType[type.upper()]
+    
+    def getPrice(self):
+        return float(self.type.value)
+    def getColor(self):
+        return self.color.name.lower().capitalize()
+    def getType(self):
+        return self.type.name.lower().capitalize()
+    def setColor(self, color):
+        self.color = carColors[color.upper()]
+    def setType(self, type):
+        self.type = hoodType[type.upper()]
+    def toString(self):
+        return print("Hood: {} in {} color, Price: ${:,.2f}".format(
+            self.getType(),
+            self.getColor(),
+            self.getPrice()))
 
 #Fender
 class Fender:
-    Enum FenderType = Regular, Sports, Carbon Fiber
-    Color enum color choices (Red, Blue, Black, Silver, Green, Yellow)
-    Price for Items: Regular = $100.00, Sports = $200.00, Carbon Fiber = $1000.00
-    float getFenderPrice()
-    Enum  getFenderColor()
-    setFenderColor(enum Color)
-    Enum getFenderType()
-    setFenderType(Enum )
-    String toString()
-    {
-        #Print the contents of the class as per requirement in the results     listed at the bottom
-    }
+    # class FenderType(Enum):
+    #     REGULAR, SPORTS, CARBONFIBER = 100.00, 200.00, 1000,00
+    def __init__(self,type,color):
+        self.color = carColors[color.upper()]
+        self.type = FenderType[type.replace(" ","").upper()]
+    
+    def getPrice(self):
+        return self.type.value
+    def getColor(self):
+        return self.color.name.lower().capitalize()
+    def getType(self):
+        return self.type.name
+    def setColor(self, color):
+        self.color = carColors[color.upper()]
+    def setType(self, type):
+        self.type = hoodType[type.upper()]
+    def toString(self):
+        return print("Fender: {} in {} color, Price=${:,.2f}".format(
+            self.getType(),
+            self.getColor(),
+            self.getPrice()))
 
 #Doors
 class Door:
-    Color Enum color choices (Red, Blue, Black, Silver, Green, Yellow)
-    Price $599.00
-    enum  getDoorColor()
-    setDoorColor(enum Color)
-    String toString()
-    {
-        #Print the contents of the class as per requirement in the results listed at the bottom
-    }
+    def __init__(self,color):
+        self.color = carColors[color.upper()]
+        self.price = 599.00
+    def  getColor(self):
+        return self.color.name.lower().capitalize()
+    def getPrice(self):
+        return self.price
+    def setColor(self, color):
+        self.color = carColors[color.upper()]
+    def toString(self):
+        return print("Doors: {} color, Price: ${:,.2f}".format(
+            self.getColor(),
+            self.price
+        ))
 
 #Wheelset
-    class Wheelset:
-    Wheelset constructor should take all as parameters
-    Enum WheelsetType = Support all listed models listed in the drawing provided above
-    WheelsetType price All supported are for $1299.00, and no cost if not selected=$0.00
-    float getWheelsetPrice()
-    enum getWheelsetType()
-    setWheelsetType(enum )
-    String toString()
-    {
-        #Print the contents of the class as per requirement in the results listed at the bottom
-    }
+class Wheelset:
+    def __init__(self,type):
+        self.type = WheelType[type.replace("-","_").upper()]
+
+    def getPrice(self):
+        if float(self.type.value) > 0:
+            return 1299.00
+        else:
+            return 0.00
+        #return float(self.type.value)
+    def getType(self):
+        return self.type.name.replace("_","-").lower().capitalize()
+    def setType(self, type):
+        self.type = WheelType[type.replace("-","_").upper()]
+    def toString(self):
+        return print("Wheelset: {}, Price: ${:,.2f}".format(
+            self.getType(),
+            self.getPrice()
+        ))
 
 #Vehicle
-##Vehicle constructor should take all as parameters
 class Vehicle:
-    Vehicle ( String vehicleMake, String vehicleModel, String year, Hood h, Fender f, Door d, Wheelset ws);
-    Hood hood; 
-    Fender fender;
-    Door door;
-    Wheelset wheel;
-    float totalPrice;  //this should contain the total price of all the selected options
-    float getTotalPrice();
-    String toString()
-    {
-        #Print vehicleMake, vehicleModel, year plus Call the toString methods of all the car parts here.
-    }
+    #Vehicle ( String vehicleMake, String vehicleModel, String year, Hood h, Fender f, Door d, Wheelset ws)
+    def __init__(self,make,model,year,h,f,d,ws):
+        self.vehicleMake,self.vehicleModel,self.year = make,model,year
+        self.hood = Hood(h[0],h[1])
+        self.fender = Fender(f[0],f[1])
+        self.door = Door(d)
+        self.wheel = Wheelset(ws) 
+
+    def getTotalPrice(self):
+        self.totalPrice = float(float(self.hood.getPrice()) + float(self.fender.getPrice()) + float(self.door.getPrice()) + float(self.wheel.getPrice()))
+        return print("\nTotal Price: ${:,.2f}".format(self.totalPrice))
+    def toString(self):
+        print("Make: {}\nModel: {}\nYear: {}\nCustomer selected the following options".format(self.vehicleMake,self.vehicleModel,self.year))
+        self.hood.toString()
+        self.fender.toString()
+        self.door.toString()
+        self.wheel.toString()
+        self.getTotalPrice()
 
 #Address
 class Address:
@@ -101,11 +163,11 @@ class Address:
         self.zip = zip
     def setState(self, state):
         self.state = state
-    def addresstoString(self):
+    def toString(self):
         addressReadLine1 = ", ".join([self.addressLine1,self.addressLine2])
         addressReadLine2 = ", ".join([self.city," ".join([self.state,self.zip])])
         fullAddress = "\n".join([addressReadLine1,addressReadLine2])
-        return print(fullAddress)
+        return fullAddress
 
 #Customer
 class Customer():
@@ -124,9 +186,9 @@ class Customer():
     def getCustomerPhoneNumber(self):
         return self.phoneNumber
     def getCustomerAddressHome(self):
-        return self.homeAddress.addresstoString()
+        return self.homeAddress.toString()
     def getCustomerAddressWork(self):
-        return self.workAddress.addresstoString()
+        return self.workAddress.toString()
     def getCustomerVehicle(self):
         return self.customerVehicle
     def setCustomerFirstName(self, sFirst):
@@ -141,16 +203,20 @@ class Customer():
         self.homeAddress = Address(address1,address2,city,state,zip)
     def setCustomerAddressWork(self, address1,address2,city,state,zip):
         self.workAddress = Address(address1,address2,city,state,zip)
-    #def setCustomerVehicle(Vehicle obj)
-    # def toString(self):
-    #     customerName = self.getCustomerFullName()
-    #     #req = "\n".join([customerName, self.homeAddress])
-    #     return print(req)
+    def setCustomerVehicle(self, *specs):
+        self.vehicle = Vehicle(*specs)
+    def toString(self):
+        print(self.getCustomerFullName())
+        print(self.getCustomerAddressHome())
+        print("\n")
+        self.vehicle.toString()
 
 #Create two customers
 customer1 =  Customer('Syed', 'Ali', 'Naqvi', '12345 Good Ave', 'Number 1', 'Hastings', 'MN',  '55022')
 customer2 =  Customer('Gloria', 'J', 'Redford', '499 Apple Street', '', 'Eagan', 'MN', '55123')
+customer1.setCustomerVehicle("Tesla","Model 3",2019,["lifted","silver"],["carbon fiber","black"],"black","Paint-coated")
 
+customer1.toString()
 ## Vehicle1
 #Create a Vehicle Object for Ali’s requirements as follows and call it vehicle1. You need to call the Vehicle constructor to pass all the following objects to it. Remember that the Vehicle object resides inside the CustomerClass.
 
