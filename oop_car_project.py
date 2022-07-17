@@ -1,10 +1,17 @@
+from audioop import add
+from email.headerregistry import Address
 from enum import Enum
 from msilib.schema import Class
+from os import stat
+from re import L
+from tkinter.messagebox import RETRY
 
 #Hood area
-class Hood:
-    Enum HoodType = Regular, Sports, Lifted, None
-    Enum Color = Red, Blue, Black, Silver, Green, Yellow
+class Hood(Enum):
+    def __init__(self) -> None:
+        super().__init__()
+    REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
+    Enum Color = "Red", "Blue", "Black", "Silver", "Green", "Yellow"
     #Hood type price Regular=$499.00, Sports=$599.00, Lifted=$699.00, None=$0.00
     getHoodPrice()
     Enum  getHoodColor()
@@ -13,30 +20,22 @@ class Hood:
     setHoodType(Enum)
     String toString()
     {
-                 # Print the contents of the class as per requirement in the results listed at the bottom
+        # Print the contents of the class as per requirement in the results listed at the bottom
     }
 
 #Fender
 class Fender:
     Enum FenderType = Regular, Sports, Carbon Fiber
-
     Color enum color choices (Red, Blue, Black, Silver, Green, Yellow)
-
     Price for Items: Regular = $100.00, Sports = $200.00, Carbon Fiber = $1000.00
-
     float getFenderPrice()
     Enum  getFenderColor()
-
     setFenderColor(enum Color)
-
     Enum getFenderType()
-
     setFenderType(Enum )
-
-
     String toString()
     {
-                  Print the contents of the class as per requirement in the results     listed at the bottom
+        #Print the contents of the class as per requirement in the results     listed at the bottom
     }
 
 #Doors
@@ -46,9 +45,8 @@ class Door:
     enum  getDoorColor()
     setDoorColor(enum Color)
     String toString()
-
     {
-                  Print the contents of the class as per requirement in the results listed at the bottom
+        #Print the contents of the class as per requirement in the results listed at the bottom
     }
 
 #Wheelset
@@ -61,77 +59,97 @@ class Door:
     setWheelsetType(enum )
     String toString()
     {
-                Print the contents of the class as per requirement in the results listed at the bottom
+        #Print the contents of the class as per requirement in the results listed at the bottom
     }
 
 #Vehicle
 ##Vehicle constructor should take all as parameters
 class Vehicle:
     Vehicle ( String vehicleMake, String vehicleModel, String year, Hood h, Fender f, Door d, Wheelset ws);
-
     Hood hood; 
-
     Fender fender;
-
     Door door;
-
     Wheelset wheel;
-
     float totalPrice;  //this should contain the total price of all the selected options
-
     float getTotalPrice();
-
     String toString()
     {
-        Print vehicleMake, vehicleModel, year plus Call the toString methods of all the car parts here.
+        #Print vehicleMake, vehicleModel, year plus Call the toString methods of all the car parts here.
     }
 
 #Address
 class Address:
-    String addressLine1, addressLine2, city, zip, state
-    String getAddressLine1( );
-    String getAddressLine2( );
-    String getCity( );
-    String getZip( );
-    String getState( );
-    setAddressLine1(String address1 );
-    setAddressLine2(String address2);
-    setCity(String city );
-    setZip(String zip );
-    setState(String state);
-    String toString()
-    {
-                Print the contents of the address object as per requirement in the results listed at the bottom
-    }
+    def __init__(self,address1,address2,city,state,zip):
+        self.addressLine1, self.addressLine2, self.city, self.state, self.zip = address1,address2,city,state,zip
+    def getAddressLine1(self):
+        return self.addressLine1
+    def getAddressLine2(self):
+        return self.addressLine2
+    def getCity(self):
+        return self.city
+    def getZip(self):
+        return self.zip
+    def getState(self):
+        return self.state
+    def setAddressLine1(self, address1):
+        self.addressLine1 = address1
+    def setAddressLine2(self, address2):
+        self.addressLine2 = address2
+    def setCity(self, city):
+        self.city = city
+    def setZip(self, zip):
+        self.zip = zip
+    def setState(self, state):
+        self.state = state
+    def addresstoString(self):
+        addressReadLine1 = ", ".join([self.addressLine1,self.addressLine2])
+        addressReadLine2 = ", ".join([self.city," ".join([self.state,self.zip])])
+        fullAddress = "\n".join([addressReadLine1,addressReadLine2])
+        return print(fullAddress)
 
 #Customer
-class Customer:
-    String FirstName, MdddleName, LastName
-    Address address
-    String studentPhone
-    Vehicle customerVehicle
-    getCustomerFirstName()
-    getCustomerMiddleName()
-    getCustomerLastName()
-    getCustomerPhoneNumber()
-    Address getCustomerAddressHome()
-    Address getCustomerAddressWork()
-    Vehicle getCustomerVehicle()
-    setCustomerFirstName(String sFirst)
-    setCustomerMiddleName(String sMiddle)
-    setCustomerLastName(String sLast)
-    setCustomerPhoneNumber(String phone)
-    setCustomerAddressHome(Address obj)
-    setCustomerAddressWork(Address obj)
-    setCustomerVehicle(Vehicle obj)
-    String toString()
-    {
-        Print the contents of the customer object including address as per requirements listed in the result.
-    }
+class Customer():
+    def __init__(self,firstName, middleName, lastName,address1,address2,city,state,zip):
+        self.homeAddress = Address(address1,address2,city,state,zip)
+        self.firstName, self.middleName, self.lastName = firstName,middleName,lastName
+
+    def getCustomerFirstName(self):
+        return self.firstName
+    def getCustomerMiddleName(self):
+        return self.middleName
+    def getCustomerLastName(self):
+        return self.lastName
+    def getCustomerFullName(self):
+        return " ".join([self.firstName,self.middleName,self.lastName])
+    def getCustomerPhoneNumber(self):
+        return self.phoneNumber
+    def getCustomerAddressHome(self):
+        return self.homeAddress.addresstoString()
+    def getCustomerAddressWork(self):
+        return self.workAddress.addresstoString()
+    def getCustomerVehicle(self):
+        return self.customerVehicle
+    def setCustomerFirstName(self, sFirst):
+        self.firstName = sFirst
+    def setCustomerMiddleName(self, sMiddle):
+        self.middleName = sMiddle
+    def setCustomerLastName(self, sLast):
+        self.lastName = sLast
+    def setCustomerPhoneNumber(self, phone):
+        self.phoneNumber = phone
+    def setCustomerAddressHome(self, address1,address2,city,state,zip):
+        self.homeAddress = Address(address1,address2,city,state,zip)
+    def setCustomerAddressWork(self, address1,address2,city,state,zip):
+        self.workAddress = Address(address1,address2,city,state,zip)
+    #def setCustomerVehicle(Vehicle obj)
+    # def toString(self):
+    #     customerName = self.getCustomerFullName()
+    #     #req = "\n".join([customerName, self.homeAddress])
+    #     return print(req)
 
 #Create two customers
-customer1 = new Customer(“Syed”, “Ali”, “Naqvi”, “12345 Good Ave”, “Number 1”, “Hastings”, “MN”,  “55022”)
-customer2 = new Customer(“Gloria”, “J”, “Redford”, “499 Apple Street”, “”, “Eagan”, “MN”,  “55123”)
+customer1 =  Customer('Syed', 'Ali', 'Naqvi', '12345 Good Ave', 'Number 1', 'Hastings', 'MN',  '55022')
+customer2 =  Customer('Gloria', 'J', 'Redford', '499 Apple Street', '', 'Eagan', 'MN', '55123')
 
 ## Vehicle1
 #Create a Vehicle Object for Ali’s requirements as follows and call it vehicle1. You need to call the Vehicle constructor to pass all the following objects to it. Remember that the Vehicle object resides inside the CustomerClass.
