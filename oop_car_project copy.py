@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-#Create Enum color and types
+#Create Enum color and types 
 class carColors(Enum):
     RED, BLUE, BLACK, SILVER, GREEN, YELLOW, NONE = object(), object(), object(), object(), object(), object(), object()
 class hoodType(Enum):
