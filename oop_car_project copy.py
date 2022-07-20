@@ -1,14 +1,8 @@
 from enum import Enum, auto
 
+#Create Enum color and types
 class carColors(Enum):
-    RED = object()
-    BLUE = object()
-    BLACK = object()
-    SILVER = object()
-    GREEN = object()
-    YELLOW = object()
-    NONE = object()
-
+    RED, BLUE, BLACK, SILVER, GREEN, YELLOW, NONE = object(), object(), object(), object(), object(), object(), object()
 class hoodType(Enum):
     REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
 class FenderType(Enum):
@@ -16,85 +10,57 @@ class FenderType(Enum):
 class WheelType(Enum):
     POWDER_COATED, PAINT_COATED, CLEAR_COATED, CHROME_PLATED, BARE_POLISHED, NONE = 1,2,3,4,5,0.0
 
+#Base Car part
 class carPart:
-    def __init__(self,color):
-        self.color = carColors[color.upper()]
-
     def getColor(self):
         return self.color.name.lower().capitalize()
-    def setColor(self, color):
-        self.color = carColors[color.upper()]
-    def toString(self):
-        return print("{}: {} color, Price: ${:,.2f}".format(
-            self.partName,
-            self.getColor(),
-            self.getPrice()))
-
-#Hood area
-class Hood:
-    #class hoodType(Enum):
-        #REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
-
-    def __init__(self,type,color):
-        self.color = carColors[color.upper()]
-        self.type = hoodType[type.upper()]
-    
     def getPrice(self):
         return float(self.type.value)
-    def getColor(self):
-        return self.color.name.lower().capitalize()
     def getType(self):
         return self.type.name.lower().capitalize()
     def setColor(self, color):
         self.color = carColors[color.upper()]
-    def setType(self, type):
-        self.type = hoodType[type.upper()]
     def toString(self):
-        return print("Hood: {} in {} color, Price: ${:,.2f}".format(
+        return print("{}: {} in {} color, Price: ${:,.2f}".format(
+            self.partName,
             self.getType(),
             self.getColor(),
             self.getPrice()))
 
+#Hood area
+class Hood(carPart):
+    def __init__(self,type,color):
+        self.color = carColors[color.upper()]
+        self.type = hoodType[type.upper()]
+        self.partName = "Hood"
+    def setType(self, type):
+        self.type = hoodType[type.upper()]
+
 #Fender
-class Fender:
-    # class FenderType(Enum):
-    #     REGULAR, SPORTS, CARBONFIBER = 100.00, 200.00, 1000,00
+class Fender(carPart):
     def __init__(self,type,color):
         self.color = carColors[color.upper()]
         self.type = FenderType[type.replace(" ","").upper()]
-    
-    def getPrice(self):
-        return self.type.value
-    def getColor(self):
-        return self.color.name.lower().capitalize()
+        self.partName = "Fender"
     def getType(self):
         if self.type.name == "CARBONFIBER":
             return "Carbon Fiber"
         else:
             return self.type.name.lower().capitalize()
-    def setColor(self, color):
-        self.color = carColors[color.upper()]
     def setType(self, type):
         self.type = hoodType[type.upper()]
-    def toString(self):
-        return print("Fender: {} in {} color, Price=${:,.2f}".format(
-            self.getType(),
-            self.getColor(),
-            self.getPrice()))
 
 #Doors
-class Door:
+class Door(carPart):
     def __init__(self,color):
         self.color = carColors[color.upper()]
         self.price = 599.00
-    def  getColor(self):
-        return self.color.name.lower().capitalize()
+        self.partName = "Doors"
     def getPrice(self):
         return self.price
-    def setColor(self, color):
-        self.color = carColors[color.upper()]
     def toString(self):
-        return print("Doors: {} color, Price: ${:,.2f}".format(
+        return print("{}: {} color, Price: ${:,.2f}".format(
+            self.partName,
             self.getColor(),
             self.price
         ))
@@ -103,19 +69,19 @@ class Door:
 class Wheelset:
     def __init__(self,type):
         self.type = WheelType[type.replace("-","_").upper()]
-
+        self.partName = "Wheelset"
     def getPrice(self):
         if float(self.type.value) > 0:
             return 1299.00
         else:
             return 0.00
-        #return float(self.type.value)
     def getType(self):
         return self.type.name.replace("_","-").lower().capitalize()
     def setType(self, type):
         self.type = WheelType[type.replace("-","_").upper()]
     def toString(self):
-        return print("Wheelset: {}, Price: ${:,.2f}".format(
+        return print("{}: {}, Price: ${:,.2f}".format(
+            self.partName,
             self.getType(),
             self.getPrice()
         ))
