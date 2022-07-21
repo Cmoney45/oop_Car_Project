@@ -1,14 +1,7 @@
 from enum import Enum, auto
 
 class carColors(Enum):
-    RED = object()
-    BLUE = object()
-    BLACK = object()
-    SILVER = object()
-    GREEN = object()
-    YELLOW = object()
-    NONE = object()
-
+    RED, BLUE, BLACK, SILVER, GREEN, YELLOW, NONE = object(), object(),object(),object(),object(),object(),object()
 class hoodType(Enum):
     REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
 class FenderType(Enum):
@@ -16,85 +9,61 @@ class FenderType(Enum):
 class WheelType(Enum):
     POWDER_COATED, PAINT_COATED, CLEAR_COATED, CHROME_PLATED, BARE_POLISHED, NONE = 1,2,3,4,5,0.0
 
-class carPart:
+class carPartColor:
     def __init__(self,color):
         self.color = carColors[color.upper()]
-
     def getColor(self):
         return self.color.name.lower().capitalize()
     def setColor(self, color):
         self.color = carColors[color.upper()]
     def toString(self):
-        return print("{}: {} color, Price: ${:,.2f}".format(
+        return print("{}: {} in {} color, Price: ${:,.2f}".format(
             self.partName,
-            self.getColor(),
-            self.getPrice()))
-
-#Hood area
-class Hood:
-    #class hoodType(Enum):
-        #REGULAR, SPORTS, LIFTED, NONE = 499.00, 599.00, 699.00, 0.00
-
-    def __init__(self,type,color):
-        self.color = carColors[color.upper()]
-        self.type = hoodType[type.upper()]
-    
-    def getPrice(self):
-        return float(self.type.value)
-    def getColor(self):
-        return self.color.name.lower().capitalize()
-    def getType(self):
-        return self.type.name.lower().capitalize()
-    def setColor(self, color):
-        self.color = carColors[color.upper()]
-    def setType(self, type):
-        self.type = hoodType[type.upper()]
-    def toString(self):
-        return print("Hood: {} in {} color, Price: ${:,.2f}".format(
             self.getType(),
             self.getColor(),
             self.getPrice()))
 
-#Fender
-class Fender:
-    # class FenderType(Enum):
-    #     REGULAR, SPORTS, CARBONFIBER = 100.00, 200.00, 1000,00
+#Hood area <- carPartColor
+class Hood(carPartColor):
     def __init__(self,type,color):
-        self.color = carColors[color.upper()]
+        super().__init__(color)
+        self.type = hoodType[type.upper()]
+        self.partName = "Hood"
+    def getPrice(self):
+        return float(self.type.value)
+    def getType(self):
+        return self.type.name.lower().capitalize()
+    def setType(self, type):
+        self.type = hoodType[type.upper()]
+
+#Fender <- carPartColor
+class Fender(carPartColor):
+    def __init__(self,type,color):
+        super().__init__(color)
         self.type = FenderType[type.replace(" ","").upper()]
-    
+        self.partName = "Fender"
+
     def getPrice(self):
         return self.type.value
-    def getColor(self):
-        return self.color.name.lower().capitalize()
     def getType(self):
         if self.type.name == "CARBONFIBER":
             return "Carbon Fiber"
         else:
             return self.type.name.lower().capitalize()
-    def setColor(self, color):
-        self.color = carColors[color.upper()]
     def setType(self, type):
         self.type = hoodType[type.upper()]
-    def toString(self):
-        return print("Fender: {} in {} color, Price=${:,.2f}".format(
-            self.getType(),
-            self.getColor(),
-            self.getPrice()))
 
-#Doors
-class Door:
+#Doors <- carPartColor
+class Door(carPartColor):
     def __init__(self,color):
-        self.color = carColors[color.upper()]
+        super().__init__(color)
         self.price = 599.00
-    def  getColor(self):
-        return self.color.name.lower().capitalize()
+        self.partName = "Door"
     def getPrice(self):
         return self.price
-    def setColor(self, color):
-        self.color = carColors[color.upper()]
     def toString(self):
-        return print("Doors: {} color, Price: ${:,.2f}".format(
+        return print("{}: {} color, Price: ${:,.2f}".format(
+            self.partName,
             self.getColor(),
             self.price
         ))
@@ -103,13 +72,11 @@ class Door:
 class Wheelset:
     def __init__(self,type):
         self.type = WheelType[type.replace("-","_").upper()]
-
     def getPrice(self):
         if float(self.type.value) > 0:
             return 1299.00
         else:
             return 0.00
-        #return float(self.type.value)
     def getType(self):
         return self.type.name.replace("_","-").lower().capitalize()
     def setType(self, type):
@@ -120,9 +87,8 @@ class Wheelset:
             self.getPrice()
         ))
 
-#Vehicle
+#Vehicle -> Hood, Fender, door, Wheel
 class Vehicle:
-    #Vehicle ( String vehicleMake, String vehicleModel, String year, Hood h, Fender f, Door d, Wheelset ws)
     def __init__(self,make,model,year,h,f,d,ws):
         self.vehicleMake,self.vehicleModel,self.year = make,model,year
         self.hood = Hood(h[0],h[1])
@@ -132,7 +98,7 @@ class Vehicle:
 
     def getTotalPrice(self):
         self.totalPrice = float(float(self.hood.getPrice()) + float(self.fender.getPrice()) + float(self.door.getPrice()) + float(self.wheel.getPrice()))
-        return print("\nTotal Price: ${:,.2f}".format(self.totalPrice))
+        return print("\nTotal Price: ${:,.2f}\n".format(self.totalPrice))
     def toString(self):
         print("Make: {}\nModel: {}\nYear: {}\nCustomer selected the following options".format(self.vehicleMake,self.vehicleModel,self.year))
         self.hood.toString()
@@ -141,7 +107,7 @@ class Vehicle:
         self.wheel.toString()
         self.getTotalPrice()
 
-#Address
+#Address -> Customer
 class Address:
     def __init__(self,address1,address2,city,state,zip):
         self.addressLine1, self.addressLine2, self.city, self.state, self.zip = address1,address2,city,state,zip
@@ -176,7 +142,7 @@ class Customer():
     def __init__(self,firstName, middleName, lastName,address1,address2,city,state,zip):
         self.homeAddress = Address(address1,address2,city,state,zip)
         self.firstName, self.middleName, self.lastName = firstName,middleName,lastName
-
+        self.vehicleList = []
     def getCustomerFirstName(self):
         return self.firstName
     def getCustomerMiddleName(self):
@@ -192,7 +158,8 @@ class Customer():
     def getCustomerAddressWork(self):
         return self.workAddress.toString()
     def getCustomerVehicle(self):
-        return self.customerVehicle
+        for vehicle in self.vehicleList:
+            print(vehicle.toString())
     def setCustomerFirstName(self, sFirst):
         self.firstName = sFirst
     def setCustomerMiddleName(self, sMiddle):
@@ -206,17 +173,20 @@ class Customer():
     def setCustomerAddressWork(self, address1,address2,city,state,zip):
         self.workAddress = Address(address1,address2,city,state,zip)
     def setCustomerVehicle(self, *specs):
-        self.vehicle = Vehicle(*specs)
+        self.currentVehicle = Vehicle(*specs)
+        self.vehicleList.append(self.currentVehicle)
     def toString(self):
         print(self.getCustomerFullName())
         print(self.getCustomerAddressHome())
         print("\n")
-        self.vehicle.toString()
+        self.getCustomerVehicle()
 
 #Create two customers
 customer1 =  Customer('Syed', 'Ali', 'Naqvi', '12345 Good Ave', 'Number 1', 'Hastings', 'MN',  '55022')
 customer2 =  Customer('Gloria', 'J', 'Redford', '499 Apple Street', '', 'Eagan', 'MN', '55123')
 customer1.setCustomerVehicle("Tesla","Model 3",2019,["lifted","silver"],["carbon fiber","black"],"black","Paint-coated")
+customer1.setCustomerVehicle("Lexus","RCX350",2021,["none","none"],["sports","black"],"black","chrome-plated")
+
 customer2.setCustomerVehicle("Ford","F150",2016,["none","None"],["Carbon Fiber","black"],"yellow","Powder-coated")
 customer1.toString()
 customer2.toString()
